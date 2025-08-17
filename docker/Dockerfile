@@ -24,11 +24,12 @@ COPY templates/ ./templates/
 COPY static/ ./static/
 COPY config.py .
 COPY app.py .
+COPY wsgi.py .
 
 # Create uploads directory
 RUN mkdir -p static/uploads
 
 EXPOSE 10000
 
-# Use gunicorn for production
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "1", "--timeout", "120", "app:app"]
+# Use gunicorn with wsgi.py
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "1", "--timeout", "120", "wsgi:app"]
