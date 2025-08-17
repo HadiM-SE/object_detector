@@ -3,8 +3,19 @@ services:
     name: apple-mug-detector
     env: python
     plan: starter
-    buildCommand: pip install -r requirements.txt
-    startCommand: python wsgi.py
+    buildCommand: |
+      chmod +x start.sh
+      pip install -r requirements.txt
+      echo "Build completed successfully"
+    startCommand: |
+      echo "Starting application..."
+      python -c "
+import os
+from app import create_app
+app = create_app()
+port = int(os.environ.get('PORT', 10000))
+app.run(host='0.0.0.0', port=port, debug=False)
+"
     envVars:
       - key: FLASK_ENV
         value: production
@@ -14,3 +25,12 @@ services:
         value: 3.11.9
     healthCheckPath: /health
     autoDeploy: true
+    buildFilter:
+      paths:
+        - "requirements.txt"
+        - "wsgi.py"
+        - "start.sh"
+        - "app/**"
+        - "templates/**"
+        - "static/**"
+        - "config.py"
