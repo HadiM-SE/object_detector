@@ -10,5 +10,7 @@ services:
         value: production
       - key: PORT
         value: 10000
+      - key: PYTHON_VERSION
+        value: 3.13.4
     healthCheckPath: /health
     autoDeploy: true
