@@ -1,19 +1,31 @@
 services:
   - type: web
-    name: apple-mug-detector
+    name: apple-mug-detector-v2
     env: python
     plan: starter
     buildCommand: |
+      echo "=== BUILD STARTING ==="
+      echo "Python version: $(python --version)"
+      echo "Current directory: $(pwd)"
+      echo "Files in directory: $(ls -la)"
       chmod +x start.sh
       pip install -r requirements.txt
-      echo "Build completed successfully"
+      echo "=== BUILD COMPLETED ==="
     startCommand: |
-      echo "Starting application..."
+      echo "=== STARTING APPLICATION ==="
+      echo "Using Python: $(which python)"
+      echo "Current directory: $(pwd)"
+      echo "Starting Flask app..."
       python -c "
 import os
+import sys
+print('Python path:', sys.path)
+print('Current directory:', os.getcwd())
+print('Files in directory:', os.listdir('.'))
 from app import create_app
 app = create_app()
 port = int(os.environ.get('PORT', 10000))
+print(f'Starting Flask app on port {port}')
 app.run(host='0.0.0.0', port=port, debug=False)
 "
     envVars:
@@ -23,6 +35,8 @@ app.run(host='0.0.0.0', port=port, debug=False)
         value: 10000
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: RENDER_CONFIG_VERSION
+        value: "v2-$(date +%s)"
     healthCheckPath: /health
     autoDeploy: true
     buildFilter:
@@ -34,3 +48,4 @@ app.run(host='0.0.0.0', port=port, debug=False)
         - "templates/**"
         - "static/**"
         - "config.py"
+        - "render.yaml"
