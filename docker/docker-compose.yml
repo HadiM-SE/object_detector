@@ -1,0 +1,10 @@
+apple-mug-detection:
+  build: .
+  ports:
+    - "5000:5000"
+  volumes:
+    - ../models:/app/models
+    - ../static:/app/static
+  environment:
+    - FLASK_ENV=production
+  restart: unless-stopped

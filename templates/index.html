@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple vs Mug Detection</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #f5f5f5;
+        }
+        
+        h1 { 
+            text-align: center; 
+            color: #333; 
+            margin-bottom: 30px;
+        }
+        
+        .upload-area { 
+            border: 2px solid #ccc; 
+            padding: 40px; 
+            text-align: center; 
+            margin: 20px 0; 
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            white-space: nowrap;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .uploaded-image {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-label {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
+        .file-label:hover {
+            background: #218838;
+        }
+        
+        .filename-display {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            min-height: 20px;
+            word-break: break-all;
+        }
+        
+        .detections-list {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .detection-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .detection-class {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .detection-confidence {
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Apple vs Mug Detection</h1>
+    
+    <div class="upload-area">
+        <h3>Upload Image</h3>
+        
+        <div class="button-container">
+            <label for="imageInput" class="file-label">Choose File</label>
+            <input type="file" id="imageInput" accept="image/*" class="file-input">
+            <button onclick="detectObjects()">Detect Objects</button>
+        </div>
+        
+        <div class="filename-display" id="filenameDisplay">
+            No file selected
+        </div>
+        
+        <div id="imageDisplay" class="image-container" style="display: none;">
+            <img id="uploadedImage" class="uploaded-image">
+        </div>
+        
+        <div id="detectionsList" class="detections-list" style="display: none;">
+            <h3>Detections</h3>
+            <div id="detectionsContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        let currentImage = null;
+        let currentDetections = [];
+        
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('filenameDisplay').textContent = file.name;
+                resetDetections();
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImage = e.target.result;
+                    displayImagePreview(currentImage);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        function resetDetections() {
+            document.getElementById('detectionsList').style.display = 'none';
+            currentDetections = [];
+            document.getElementById('detectionsContent').innerHTML = '';
+        }
+        
+        function displayImagePreview(imageSrc) {
+            const img = document.getElementById('uploadedImage');
+            const container = document.getElementById('imageDisplay');
+            
+            img.onload = function() {
+                container.style.display = 'block';
+            };
+            img.src = imageSrc;
+        }
+        
+        function displayDetections(detections) {
+            const detectionsList = document.getElementById('detectionsList');
+            const detectionsContent = document.getElementById('detectionsContent');
+            
+            if (detections.length === 0) {
+                detectionsContent.innerHTML = '<p>No objects detected</p>';
+            } else {
+                let html = '';
+                detections.forEach((detection, index) => {
+                    html += `
+                        <div class="detection-item">
+                            <div class="detection-class">${detection.class}</div>
+                            <div class="detection-confidence">Confidence: ${(detection.confidence * 100).toFixed(1)}%</div>
+                        </div>
+                    `;
+                });
+                detectionsContent.innerHTML = html;
+            }
+            
+            detectionsList.style.display = 'block';
+        }
+        
+        async function detectObjects() {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select an image first');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            try {
+                const response = await fetch('/detect', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentDetections = data.detections;
+                    displayDetections(data.detections);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

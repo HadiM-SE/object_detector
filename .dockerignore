@@ -1,0 +1,23 @@
+# Exclude unnecessary files but keep essential ones
+.git
+.gitignore
+README.md
+*.log
+__pycache__
+*.pyc
+.env
+.venv
+venv/
+env/
+.DS_Store
+Thumbs.db
+
+# Keep these essential directories
+!app/
+!templates/
+!static/
+!models/
+!config.py
+!app.py
+!requirements.txt
+!render.yaml
