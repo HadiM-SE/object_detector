@@ -31,5 +31,4 @@ RUN mkdir -p static/uploads
 
 EXPOSE 10000
 
-# Use gunicorn with explicit module:app reference
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "1", "--timeout", "120", "wsgi:app"]
+CMD ["python", "wsgi.py"]

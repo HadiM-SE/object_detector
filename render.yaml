@@ -5,6 +5,8 @@ services:
     plan: starter
     dockerfilePath: ./docker/Dockerfile
     dockerContext: .
+    buildCommand: docker build -f docker/Dockerfile -t apple-mug-detector .
+    startCommand: gunicorn --bind 0.0.0.0:10000 --workers 1 --timeout 120 wsgi:app
     envVars:
       - key: FLASK_ENV
         value: production
