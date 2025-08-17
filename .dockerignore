@@ -21,3 +21,4 @@ Thumbs.db
 !app.py
 !requirements.txt
 !render.yaml
+!wsgi.py
