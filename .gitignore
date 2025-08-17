@@ -43,5 +43,7 @@ requirements_fast.txt
 run.py
 runtime.txt
 
-# Keep render.yaml for deployment
+# Keep deployment files
 # !render.yaml
+# !Procfile
+# !wsgi.py

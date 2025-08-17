@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
 WSGI entry point for the Apple Mug Detector application.
-This file is used by gunicorn to serve the Flask application.
+This file serves as the main entry point for both development and production.
 """
 
 import os
 from app import create_app
 
 # Create the Flask application instance
-application = create_app()
-app = application  # Alias for gunicorn
+app = create_app()
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 10000))
-    application.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)

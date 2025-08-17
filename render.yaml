@@ -1,12 +1,10 @@
 services:
   - type: web
     name: apple-mug-detector
-    env: docker
+    env: python
     plan: starter
-    dockerfilePath: ./docker/Dockerfile
-    dockerContext: .
-    buildCommand: docker build -f docker/Dockerfile -t apple-mug-detector .
-    startCommand: gunicorn --bind 0.0.0.0:10000 --workers 1 --timeout 120 wsgi:app
+    buildCommand: pip install -r requirements.txt
+    startCommand: python wsgi.py
     envVars:
       - key: FLASK_ENV
         value: production
