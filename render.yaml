@@ -23,6 +23,7 @@ services:
         - "start.sh"
         - "start_app.py"
         - "run.py"
+        - "models/**"
         - "app/**"
         - "templates/**"
         - "static/**"
