@@ -23,7 +23,7 @@ def load_model():
             print("=== END DEBUGGING ===")
             
             if not os.path.exists(model_path):
-                raise FileNotFoundError(f"Custom model not found at {model_path}. Please ensure the model is deployed or upgrade your Render plan.")
+                raise FileNotFoundError(f"Custom model not found at {model_path}.")
             
             print("Loading custom model...")
             _model = YOLO(model_path)
