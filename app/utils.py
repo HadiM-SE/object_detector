@@ -22,14 +22,11 @@ def load_model():
             print(f"Model file size: {os.path.getsize(model_path) if os.path.exists(model_path) else 'N/A'}")
             print("=== END DEBUGGING ===")
             
-            # Try to load custom model first
-            if os.path.exists(model_path):
-                print("Loading custom model...")
-                _model = YOLO(model_path)
-            else:
-                print("Custom model not found, using pre-trained YOLOv8n...")
-                _model = YOLO('yolov8n.pt')  # Much smaller model
-                
+            if not os.path.exists(model_path):
+                raise FileNotFoundError(f"Custom model not found at {model_path}. Please ensure the model is deployed or upgrade your Render plan.")
+            
+            print("Loading custom model...")
+            _model = YOLO(model_path)
             print("Model loaded successfully")
         return _model
     except Exception as e:
