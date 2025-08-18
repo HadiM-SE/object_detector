@@ -11,23 +11,47 @@ def load_model():
             print("=== DEBUGGING FILE SYSTEM ===")
             print(f"Current working directory: {os.getcwd()}")
             print(f"Contents of current directory: {os.listdir('.')}")
-            if os.path.exists('models'):
-                print(f"Models directory exists, contents: {os.listdir('models')}")
-            else:
-                print("Models directory does not exist")
             
-            model_path = os.path.join('models', 'best.pt')
-            print(f"Model path: {model_path}")
-            print(f"Model file exists: {os.path.exists(model_path)}")
-            print(f"Model file size: {os.path.getsize(model_path) if os.path.exists(model_path) else 'N/A'}")
+            # Check multiple possible model locations
+            model_paths = [
+                os.path.join('models', 'best.pt'),           # Original path
+                'best.pt',                                   # Root directory
+                os.path.join(os.path.dirname(__file__), '..', 'models', 'best.pt'),  # Relative from utils.py
+                os.path.join('/opt/render/project/src', 'models', 'best.pt')         # Absolute on Render
+            ]
+            
+            # Try to create models directory if it doesn't exist
+            if not os.path.exists('models'):
+                try:
+                    os.makedirs('models', exist_ok=True)
+                    print("Created models directory")
+                except Exception as mkdir_err:
+                    print(f"Could not create models directory: {mkdir_err}")
+            else:
+                print(f"Models directory exists, contents: {os.listdir('models')}")
+            
+            # Try each possible model path
+            model_path = None
+            for path in model_paths:
+                print(f"Trying model path: {path}")
+                if os.path.exists(path):
+                    model_path = path
+                    print(f"Found model at: {model_path}")
+                    print(f"Model file size: {os.path.getsize(model_path)}")
+                    break
+            
             print("=== END DEBUGGING ===")
             
-            if not os.path.exists(model_path):
-                raise FileNotFoundError(f"Custom model not found at {model_path}.")
-            
-            print("Loading custom model...")
-            _model = YOLO(model_path)
-            print("Model loaded successfully")
+            # If no model found, try using the default YOLO model
+            if model_path is None:
+                print("Custom model not found, using default YOLOv8n model")
+                _model = YOLO('yolov8n.pt')  # Use default YOLOv8 nano model
+                print("Default model loaded successfully")
+            else:
+                print("Loading custom model...")
+                _model = YOLO(model_path)
+                print("Custom model loaded successfully")
+        
         return _model
     except Exception as e:
         print(f"ERROR loading model: {str(e)}")

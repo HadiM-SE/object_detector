@@ -70,3 +70,24 @@ docker run -d --name apple-mug-app -p 5000:5000 \
 - **Persistent storage** - files don't disappear
 - **Production ready** - scalable deployment
 - **Easy setup** - one command deployment
+
+### Render.com Deployment:
+- Create a free Render.com account
+- Ensure the `models` directory is properly tracked with Git LFS
+- Connect your GitHub repository to Render
+- Create a new Web Service using the configuration from `render.yaml`
+- **Important**: Make sure the YOLOv8 model file (`models/best.pt`) is properly committed with Git LFS before deployment
+
+#### Render.com Model Deployment Troubleshooting:
+
+1. **Check Git LFS**: Make sure your model file is tracked with Git LFS
+   ```
+   git lfs install
+   git lfs track "*.pt"
+   git add .gitattributes
+   git add models/best.pt
+   git commit -m "Add model file with Git LFS"
+   git push
+   ```
+
+2. **Verify Model Existence**: The application will automatically fall back to using the default YOLOv8 nano model if your custom model isn't found
