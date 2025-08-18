@@ -15,18 +15,7 @@ services:
       echo "Using Python: $(which python)"
       echo "Current directory: $(pwd)"
       echo "Starting Flask app..."
-      python -c "
-import os
-import sys
-print('Python path:', sys.path)
-print('Current directory:', os.getcwd())
-print('Files in directory:', os.listdir('.'))
-from app import create_app
-app = create_app()
-port = int(os.environ.get('PORT', 10000))
-print(f'Starting Flask app on port {port}')
-app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
-"
+      python start_app.py
     envVars:
       - key: FLASK_ENV
         value: production
@@ -43,6 +32,7 @@ app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
         - "requirements.txt"
         - "wsgi.py"
         - "start.sh"
+        - "start_app.py"
         - "app/**"
         - "templates/**"
         - "static/**"
