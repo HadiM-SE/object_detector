@@ -8,10 +8,28 @@ def load_model():
     try:
         if _model is None:
             print("Loading YOLO model...")
+            print("=== DEBUGGING FILE SYSTEM ===")
+            print(f"Current working directory: {os.getcwd()}")
+            print(f"Contents of current directory: {os.listdir('.')}")
+            if os.path.exists('models'):
+                print(f"Models directory exists, contents: {os.listdir('models')}")
+            else:
+                print("Models directory does not exist")
+            
             model_path = os.path.join('models', 'best.pt')
             print(f"Model path: {model_path}")
             print(f"Model file exists: {os.path.exists(model_path)}")
-            _model = YOLO(model_path)
+            print(f"Model file size: {os.path.getsize(model_path) if os.path.exists(model_path) else 'N/A'}")
+            print("=== END DEBUGGING ===")
+            
+            # Try to load custom model first
+            if os.path.exists(model_path):
+                print("Loading custom model...")
+                _model = YOLO(model_path)
+            else:
+                print("Custom model not found, using pre-trained YOLOv8n...")
+                _model = YOLO('yolov8n.pt')  # Much smaller model
+                
             print("Model loaded successfully")
         return _model
     except Exception as e:
