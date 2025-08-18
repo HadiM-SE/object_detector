@@ -10,12 +10,7 @@ services:
       echo "Files in directory: $(ls -la)"
       pip install -r requirements.txt
       echo "=== BUILD COMPLETED ==="
-    startCommand: |
-      echo "=== STARTING APPLICATION ==="
-      echo "Using Python: $(which python)"
-      echo "Current directory: $(pwd)"
-      echo "Starting Flask app..."
-      python start_app.py
+    startCommand: python wsgi.py
     envVars:
       - key: FLASK_ENV
         value: production

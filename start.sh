@@ -1,8 +1,6 @@
 #!/bin/bash
-echo "Starting Apple Mug Detector..."
+echo "=== STARTING APPLICATION ==="
+echo "Using Python: $(which python)"
 echo "Current directory: $(pwd)"
-echo "Python version: $(python --version)"
-echo "Installing dependencies..."
-pip install -r requirements.txt
-echo "Starting Flask application..."
+echo "Starting Flask app..."
 python wsgi.py
