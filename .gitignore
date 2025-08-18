@@ -19,7 +19,8 @@ models/*.pt
 models/*.pth
 
 # Uploads
-static/uploads/
+static/uploads/*
+!static/uploads/.gitkeep
 
 # Environment variables
 .env
@@ -40,10 +41,10 @@ Thumbs.db
 
 # Old files
 requirements_fast.txt
-run.py
 runtime.txt
 
 # Keep deployment files
-# !render.yaml
-# !Procfile
-# !wsgi.py
+!render.yaml
+!wsgi.py
+!start.sh
+!run.py

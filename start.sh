@@ -1,6 +1,7 @@
 #!/bin/bash
+set -e
 echo "=== STARTING APPLICATION ==="
-echo "Using Python: $(which python)"
 echo "Current directory: $(pwd)"
-echo "Starting Flask app..."
-python wsgi.py
+echo "Python version: $(python --version)"
+echo "Starting Flask app with run.py..."
+exec python run.py

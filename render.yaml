@@ -10,7 +10,7 @@ services:
       echo "Files in directory: $(ls -la)"
       pip install -r requirements.txt
       echo "=== BUILD COMPLETED ==="
-    startCommand: python wsgi.py
+    startCommand: bash start.sh
     envVars:
       - key: FLASK_ENV
         value: production
@@ -28,6 +28,7 @@ services:
         - "wsgi.py"
         - "start.sh"
         - "start_app.py"
+        - "run.py"
         - "app/**"
         - "templates/**"
         - "static/**"
