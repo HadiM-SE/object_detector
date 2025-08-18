@@ -3,13 +3,7 @@ services:
     name: apple-mug-detector-v2-$(date +%s)
     env: python
     plan: starter
-    buildCommand: |
-      echo "=== BUILD STARTING ==="
-      echo "Python version: $(python --version)"
-      echo "Current directory: $(pwd)"
-      echo "Files in directory: $(ls -la)"
-      pip install -r requirements.txt
-      echo "=== BUILD COMPLETED ==="
+    buildCommand: pip install -r requirements.txt
     startCommand: python -u run.py
     envVars:
       - key: FLASK_ENV
