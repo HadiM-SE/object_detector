@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: apple-mug-detector-v2
+    name: apple-mug-detector-v2-$(date +%s)
     env: python
     plan: starter
     buildCommand: |
@@ -10,7 +10,7 @@ services:
       echo "Files in directory: $(ls -la)"
       pip install -r requirements.txt
       echo "=== BUILD COMPLETED ==="
-    startCommand: bash start.sh
+    startCommand: python -u run.py
     envVars:
       - key: FLASK_ENV
         value: production
